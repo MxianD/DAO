@@ -1,16 +1,22 @@
 <template>
   <div id="app">
-    <CrowdFund />
+    <!-- <CrowdFund /> -->
+    <Home />
   </div>
 </template>
 
 <script>
-import CrowdFund from "./components/CrowdFund.vue";
-
+// import CrowdFund from "./components/CrowdFund.vue";
+import Home from "./components/Home.vue";
 export default {
   name: "app",
   components: {
-    CrowdFund,
+    Home,
   },
 };
 </script>
+<style>
+* {
+  margin: 0;
+}
+</style>
