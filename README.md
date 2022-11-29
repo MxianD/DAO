@@ -1,10 +1,10 @@
 # DAO
 一个投票Dapp
 
-##使用技术
-  ###前端 vue3
-  ###链端 solidity
-  ##后端  java
+## 使用技术
+  ### 前端 vue3
+  ### 链端 solidity
+  ## 后端  java
 ## 使用框架
   ### Truffle
   ### Vue-cli
