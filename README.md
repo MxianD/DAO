@@ -6,7 +6,7 @@
   ## 后端  java
 ## 使用框架
   ### Truffle
-  ### Vue-cli
+  ### Vue
   ### springboot
 ## 使用说明
   本案例运行在本地搭建的区块链上
