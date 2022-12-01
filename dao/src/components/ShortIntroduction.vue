@@ -62,7 +62,7 @@
                 left: 50px;
               "
             >
-              Start
+              <router-link to="/system">Start</router-link>
             </p>
           </div>
         </div>

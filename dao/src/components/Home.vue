@@ -48,7 +48,7 @@
                 left: 40px;
               "
             >
-              Check
+              <router-link to="/ranking">Check</router-link>
             </p>
           </div>
         </div>
@@ -97,7 +97,7 @@
                 left: 50px;
               "
             >
-              View
+              <router-link to="/decisions">View</router-link>
             </p>
           </div>
         </div>
