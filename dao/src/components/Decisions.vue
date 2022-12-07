@@ -4,11 +4,17 @@
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">候选人</th>
+          <th scope="col">待投事件</th>
           <th scope="col">得票数</th>
         </tr>
       </thead>
-      <tbody id="candidatesResults" ref="candidatesResults"></tbody>
+      <tbody id="candidatesResults" ref="candidatesResults">
+        <tr v-for="(item, index) in id" :key="index">
+          <th>{{ id[index] }}</th>
+          <td>{{ name[index] }}</td>
+          <td>{{ voteCount[index] }}</td>
+        </tr>
+      </tbody>
     </table>
     <form onSubmit="App.castVote(); return false;">
       <div class="form-group">
@@ -17,7 +23,9 @@
           class="form-control"
           id="candidatesSelect"
           ref="candidatesSelect"
-        ></select>
+        >
+          <option value="{{id[0]}}">{{ name[0] }}</option>
+        </select>
       </div>
       <button type="submit" class="btn btn-primary">投票</button>
       <hr />
@@ -34,6 +42,7 @@ export default {
   name: "Decisions",
   // 当前Vue组件被创建时回调的hook 函数
   async created() {
+    console.log(this);
     //  初始化 web3及账号
     await this.initWeb3Account();
     //  初始化合约实例
@@ -45,6 +54,9 @@ export default {
     return {
       electionContract: {},
       decisions: {},
+      id: [],
+      name: [],
+      voteCount: [],
     };
   },
   methods: {
@@ -84,7 +96,6 @@ export default {
       this.electionContract = contract(election);
       this.electionContract.setProvider(this.provider); //为接下来所有实例设置provider
       this.decisions = await this.electionContract.deployed(); //将合约'Election'的对象作为decisions放在Vue实例上并且将合约部署到区块链上
-      console.log(this);
       this.listenForEvents();
     },
     /**
@@ -97,6 +108,7 @@ export default {
       this.web3.eth.getBalance(this.decisions.address).then((r) => {
         this.total = this.web3.utils.fromWei(r);
       });
+      this.render();
     },
     /**
      * 监听投票事件 有点问题
@@ -107,7 +119,10 @@ export default {
         election.abi,
         "0xF168580DB3E518A019aAbD875015Bc28e1220e8F"
       );
-      console.log(metaTxContract == this.decisions);
+      console.log(
+        "metaTxContract == this.decisions",
+        metaTxContract == this.decisions
+      );
       metaTxContract.events
         .voted(
           {
@@ -153,41 +168,28 @@ export default {
      * 候选人界面渲染
      */
     render() {
-      var electionInstance;
+      let electionInstance;
       this.electionContract
         .deployed()
         .then((instance) => {
           electionInstance = instance;
-          return electionInstance.VoteEventCounts(); //获取候选人数量
+          console.log("electionInstance", electionInstance);
+          return electionInstance.VoteEventCounts(); //获取候选人的数量
         })
         .then((VoteEventCounts) => {
-          var candidatesResults = this.$refs.candidatesResults;
-          console.log(candidatesResults);
-          candidatesResults.empty();
-          var candidatesSelect = this.$refs.candidatesSelect;
-          candidatesSelect.empty();
-          for (var i = 1; i <= VoteEventCounts; i++) {
-            electionInstance.candidates(i).then(function (candidate) {
-              // 依次获取某一个候选人信息
-              var id = candidate[0];
-              var name = candidate[1];
-              var voteCount = candidate[2];
-
-              // Render candidate Result
-              var candidateTemplate =
-                "<tr><th>" +
-                id +
-                "</th><td>" +
-                name +
-                "</td><td>" +
-                voteCount +
-                "</td></tr>";
-              candidatesResults.append(candidateTemplate); // 候选人信息写入候选人表格内
-
-              // Render candidate ballot option
-              var candidateOption =
-                "<option value='" + id + "' >" + name + "</ option>";
-              candidatesSelect.append(candidateOption); // 候选人信息写入投票选项
+          console.log("VoteEventCounts", VoteEventCounts);
+          let candidatesResults = this.$refs.candidatesResults;
+          let candidatesSelect = this.$refs.candidatesSelect;
+          console.log("candidatesResults", candidatesResults);
+          console.log("candidatesSelect", candidatesSelect);
+          for (let i = 1; i <= VoteEventCounts; i++) {
+            console.log(i, electionInstance);
+            electionInstance.voteEvents(i).then((voteEvent) => {
+              console.log(voteEvent);
+              // 依次获取某一个事件信息
+              this.id.push(voteEvent[0]);
+              this.name.push(voteEvent[1]);
+              this.voteCount.push(voteEvent[2]);
             });
           }
         });
