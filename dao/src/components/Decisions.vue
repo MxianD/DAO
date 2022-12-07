@@ -16,18 +16,24 @@
         </tr>
       </tbody>
     </table>
-    <form onSubmit="App.castVote(); return false;">
+    <form @submit="castVote()">
       <div class="form-group">
-        <label for="candidatesSelect">选择候选人</label>
+        <label for="candidatesSelect">选择事件</label>
         <select
           class="form-control"
           id="candidatesSelect"
           ref="candidatesSelect"
         >
-          <option value="{{id[0]}}">{{ name[0] }}</option>
+          <option
+            v-for="(item, index) in id"
+            :key="index"
+            value="{{id[index]}}"
+          >
+            {{ name[index] }}
+          </option>
         </select>
       </div>
-      <button type="submit" class="btn btn-primary">投票</button>
+      <button type="submit" @click="voteIt">投票</button>
       <hr />
     </form>
   </div>
@@ -57,6 +63,7 @@ export default {
       id: [],
       name: [],
       voteCount: [],
+      accounts: [],
     };
   },
   methods: {
@@ -85,15 +92,18 @@ export default {
       }
       this.web3 = new Web3(this.provider);
       // this.web3 = new Web3(this.web3Provider);
-      // this.web3.eth.getAccounts().then((accs) => {
-      //   this.account = accs[0]; //获取链上的第一个账户
-      // });
+      this.web3.eth.getAccounts().then((accs) => {
+        console.log("accs", accs);
+        this.accounts.push(accs); //获取链上的账户
+      });
     },
     /**
      * 初始化合约·
      */
     async initContract() {
+      console.log(election);
       this.electionContract = contract(election);
+      console.log(this.electionContract);
       this.electionContract.setProvider(this.provider); //为接下来所有实例设置provider
       this.decisions = await this.electionContract.deployed(); //将合约'Election'的对象作为decisions放在Vue实例上并且将合约部署到区块链上
       this.listenForEvents();
@@ -113,38 +123,37 @@ export default {
     /**
      * 监听投票事件 有点问题
      */
-    listenForEvents() {
+    async listenForEvents() {
       console.log("en");
-      var metaTxContract = new this.web3.eth.Contract(
-        election.abi,
-        "0xF168580DB3E518A019aAbD875015Bc28e1220e8F"
-      );
-      console.log(
-        "metaTxContract == this.decisions",
-        metaTxContract == this.decisions
-      );
-      metaTxContract.events
-        .voted(
-          {
-            fromBlock: 0,
-          },
-          function (error, event) {
-            console.log("error", error);
-            console.log("event", event);
-            this.render();
-          }
-        )
-        .on("data", function (event) {
-          console.log(event); // same results as the optional callback above
-        })
-        .on("changed", function (event) {
-          // remove event from local database
-          console.log("error_2", event);
-        })
-        .on("error", console.error);
-      console.log("zn");
+      // var metaTxContract = new this.web3.eth.Contract(
+      //   election.abi,
+      //   "0xF168580DB3E518A019aAbD875015Bc28e1220e8F"
+      // );
+      // console.log(
+      //   "metaTxContract == this.decisions",
+      //   metaTxContract == this.decisions
+      // );
+      // metaTxContract.events
+      //   .voted(
+      //     {
+      //       fromBlock: 0,
+      //     },
+      //     function (error, event) {
+      //       console.log("error", error);
+      //       console.log("event", event);
+      //       this.render();
+      //     }
+      //   )
+      //   .on("data", function (event) {
+      //     console.log(event); // same results as the optional callback above
+      //   })
+      //   .on("changed", function (event) {
+      //     // remove event from local database
+      //     console.log("error_2", event);
+      //   })
+      //   .on("error", console.error);
+      // console.log("zn");
 
-      //#region
       // this.decisions.then(function (instance) {
       //   instance.listProposal();
       //   console.log("instance", instance.voted);
@@ -162,7 +171,9 @@ export default {
       //       console.log("event", event);
       //     });
       // });
-      //#endregion
+      console.log("decisions", this.decisions);
+      console.log("decisions_2", this.decisions.allEvents());
+      console.log("accounts[0]", this.accounts);
     },
     /**
      * 候选人界面渲染
@@ -193,6 +204,21 @@ export default {
             });
           }
         });
+    },
+    /**
+     * 投票响应事件
+     */
+    castVote() {
+      alert("success!");
+    },
+    /**
+     * 投票
+     */
+    async voteIt() {
+      let res = await this.decisions.vote(1, {
+        from: this.accounts[0].toString(),
+      });
+      console.log("res", res);
     },
   },
 };

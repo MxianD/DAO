@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@truffle/artifactor": "^4.0.176",
     "core-js": "^3.6.5",
     "truffle-contract": "^4.0.31",
     "vue": "^3.0.0",
