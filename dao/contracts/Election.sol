@@ -44,7 +44,7 @@ contract Election {
         投票
      */
     function vote(uint256 _voteEventId) public {
-        require(!voters[msg.sender], unicode"你已经投过票辣！");
+        // require(!voters[msg.sender], unicode"你已经投过票辣！");
         require(_voteEventId > 0 && _voteEventId <= VoteEventCounts, "@@@@");
 
         voters[msg.sender] = true;

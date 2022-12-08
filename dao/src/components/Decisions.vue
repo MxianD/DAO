@@ -1,41 +1,72 @@
 <template>
-  <div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">待投事件</th>
-          <th scope="col">得票数</th>
-        </tr>
-      </thead>
-      <tbody id="candidatesResults" ref="candidatesResults">
-        <tr v-for="(item, index) in id" :key="index">
-          <th>{{ id[index] }}</th>
-          <td>{{ name[index] }}</td>
-          <td>{{ voteCount[index] }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <form @submit="castVote()">
-      <div class="form-group">
-        <label for="candidatesSelect">选择事件</label>
-        <select
-          class="form-control"
-          id="candidatesSelect"
-          ref="candidatesSelect"
-        >
-          <option
-            v-for="(item, index) in id"
-            :key="index"
-            value="{{id[index]}}"
-          >
-            {{ name[index] }}
-          </option>
-        </select>
+  <div
+    style="
+      display: flex;
+      flex-direction: column;
+      width: 98vw;
+      height: 250vh;
+      background-color: rgb(37, 38, 39);
+    "
+  >
+    <Navigator style="flex: 1"></Navigator>
+    <div class="table" id="candidatesResults" ref="candidatesResults">
+      <div class="title" style="flex: 1">
+        <div style="font-size: 60px; color: rgb(237, 198, 99)">#</div>
+        <div v-for="(item, index) in id" :key="index">{{ id[index] }}</div>
       </div>
-      <button type="submit" @click="voteIt">投票</button>
-      <hr />
-    </form>
+      <div class="title" style="flex: 4">
+        <div style="font-size: 60px; margin: auto; color: rgb(237, 198, 99)">
+          事务
+        </div>
+        <div v-for="(item, index) in id" :key="index">{{ name[index] }}</div>
+      </div>
+      <div class="title" style="flex: 1">
+        <div style="font-size: 60px; color: rgb(237, 198, 99)">投票</div>
+        <div
+          style="
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+          "
+          v-for="(item, index) in id"
+          :key="index"
+        >
+          <SvgIcon
+            iconClass="denied"
+            @click="voteIt(item)"
+            style="
+              font-size: 20px;
+              flex: 1;
+              margin-right: 50px;
+              background-color: forestgreen;
+              width: 40%;
+              height: 40%;
+              text-align: center;
+            "
+          ></SvgIcon>
+          <div
+            @click="voteIt(item)"
+            style="
+              font-size: 20px;
+              flex: 1;
+              background-color: red;
+              width: 80%;
+              height: 40%;
+              text-align: center;
+            "
+          >
+            disagree
+          </div>
+        </div>
+      </div>
+      <div class="title" style="flex: 2">
+        <div style="font-size: 60px; color: rgb(237, 198, 99)">得票数</div>
+        <div v-for="(item, index) in id" :key="index">
+          {{ voteCount[index] }}
+        </div>
+      </div>
+    </div>
+    <div style="flex: 13"></div>
   </div>
 </template>
 
@@ -43,9 +74,12 @@
 import Web3 from "web3";
 import contract from "truffle-contract";
 import election from "../../build/contracts/Election.json";
-
+import Navigator from "./Navigator.vue";
+import "../assets/icons";
+import SvgIcon from "../components/SvgIcon.vue";
 export default {
   name: "Decisions",
+  components: { Navigator, SvgIcon },
   // 当前Vue组件被创建时回调的hook 函数
   async created() {
     console.log(this);
@@ -62,8 +96,9 @@ export default {
       decisions: {},
       id: [],
       name: [],
-      voteCount: [],
+      voteCount: [], //本账户投的票
       accounts: [],
+      total: 0, //账户余额
     };
   },
   methods: {
@@ -106,7 +141,6 @@ export default {
       console.log(this.electionContract);
       this.electionContract.setProvider(this.provider); //为接下来所有实例设置provider
       this.decisions = await this.electionContract.deployed(); //将合约'Election'的对象作为decisions放在Vue实例上并且将合约部署到区块链上
-      this.listenForEvents();
     },
     /**
      * 获取信息
@@ -119,61 +153,6 @@ export default {
         this.total = this.web3.utils.fromWei(r);
       });
       this.render();
-    },
-    /**
-     * 监听投票事件 有点问题
-     */
-    async listenForEvents() {
-      console.log("en");
-      // var metaTxContract = new this.web3.eth.Contract(
-      //   election.abi,
-      //   "0xF168580DB3E518A019aAbD875015Bc28e1220e8F"
-      // );
-      // console.log(
-      //   "metaTxContract == this.decisions",
-      //   metaTxContract == this.decisions
-      // );
-      // metaTxContract.events
-      //   .voted(
-      //     {
-      //       fromBlock: 0,
-      //     },
-      //     function (error, event) {
-      //       console.log("error", error);
-      //       console.log("event", event);
-      //       this.render();
-      //     }
-      //   )
-      //   .on("data", function (event) {
-      //     console.log(event); // same results as the optional callback above
-      //   })
-      //   .on("changed", function (event) {
-      //     // remove event from local database
-      //     console.log("error_2", event);
-      //   })
-      //   .on("error", console.error);
-      // console.log("zn");
-
-      // this.decisions.then(function (instance) {
-      //   instance.listProposal();
-      //   console.log("instance", instance.voted);
-      //   instance
-      //     .voted(
-      //       {},
-      //       {
-      //         fromBlock: 0,
-      //         toBlock: "latest",
-      //       }
-      //     )
-      //     .watch(function (error, event) {
-      //       this.render();
-      //       console.log("error", error);
-      //       console.log("event", event);
-      //     });
-      // });
-      console.log("decisions", this.decisions);
-      console.log("decisions_2", this.decisions.allEvents());
-      console.log("accounts[0]", this.accounts);
     },
     /**
      * 候选人界面渲染
@@ -190,9 +169,7 @@ export default {
         .then((VoteEventCounts) => {
           console.log("VoteEventCounts", VoteEventCounts);
           let candidatesResults = this.$refs.candidatesResults;
-          let candidatesSelect = this.$refs.candidatesSelect;
           console.log("candidatesResults", candidatesResults);
-          console.log("candidatesSelect", candidatesSelect);
           for (let i = 1; i <= VoteEventCounts; i++) {
             console.log(i, electionInstance);
             electionInstance.voteEvents(i).then((voteEvent) => {
@@ -206,22 +183,39 @@ export default {
         });
     },
     /**
-     * 投票响应事件
-     */
-    castVote() {
-      alert("success!");
-    },
-    /**
      * 投票
      */
-    async voteIt() {
-      let res = await this.decisions.vote(1, {
+    async voteIt(item) {
+      let res = await this.decisions.vote(item, {
         from: this.accounts[0].toString(),
       });
+      alert("success!");
+
       console.log("res", res);
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.table {
+  background-color: rgb(33, 34, 35);
+  color: white;
+  height: 60vh;
+  width: 80vw;
+  display: flex;
+  flex: 4;
+  justify-content: center;
+  margin: 40px auto;
+}
+.title {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.title div {
+  flex: 1;
+  font-size: 40px;
+  margin: auto;
+}
+</style>

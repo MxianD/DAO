@@ -116,7 +116,6 @@ import ShortIntroduction from "./ShortIntroduction.vue"; //简介
 export default {
   components: { Navigator, ShortIntroduction, Ecosystem, PartnerShip },
   name: "home",
-  component: {},
 };
 </script>
 
