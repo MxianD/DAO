@@ -22,7 +22,8 @@ contract Election {
     struct VoteEvent {
         uint256 id;
         string name; //事件名
-        uint256 voteCount; //得票数
+        uint256 voteCount_yes; //赞成得票数
+        uint256 voteCount_no; //不赞成得票数
     }
     uint256 public VoteEventCounts; //事件数同时代表id
     mapping(uint256 => VoteEvent) public voteEvents; //事件映射
@@ -37,18 +38,22 @@ contract Election {
      */
     function addVoteEvent(string memory _name) private {
         VoteEventCounts++;
-        voteEvents[VoteEventCounts] = VoteEvent(VoteEventCounts, _name, 0);
+        voteEvents[VoteEventCounts] = VoteEvent(VoteEventCounts, _name, 0, 0);
     }
 
     /**
         投票
      */
-    function vote(uint256 _voteEventId) public {
+    function vote(uint256 _voteEventId, bool _decision) public {
         // require(!voters[msg.sender], unicode"你已经投过票辣！");
         require(_voteEventId > 0 && _voteEventId <= VoteEventCounts, "@@@@");
 
         voters[msg.sender] = true;
-        voteEvents[_voteEventId].voteCount++;
+        if (_decision == true) {
+            voteEvents[_voteEventId].voteCount_yes++;
+        } else {
+            voteEvents[_voteEventId].voteCount_no++;
+        }
 
         emit voted(_voteEventId); //触发投票事件
     }

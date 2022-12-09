@@ -1,4 +1,4 @@
-import { createApp, h } from 'vue'
+import { createApp, h } from 'vue';
 import * as VueRouter from 'vue-router';
 import App from './App.vue';
 const app = createApp({
@@ -7,15 +7,13 @@ const app = createApp({
 /**
  * SVG
  */
-import SvgIcon from '@/components/SvgIcon' // svg组件
-app.component('svg-icon', SvgIcon)
+import "@/svgIcon/index";
+import svgIcon from "@/svgIcon/index.vue";
+app.component('svg-icon', svgIcon);
 
-const req = require.context('./assets/icons/svg', false, /\.svg$/)
-const requireAll = requireContext => requireContext.keys().map(requireContext)
-requireAll(req)
-    /**
-     * Vue-router
-     */
+/**
+ * Vue-router
+ */
 import Home from './components/Home.vue'
 import Ranking from './components/Ranking.vue'
 import Decisions from './components/Decisions.vue'

@@ -31,38 +31,36 @@
           v-for="(item, index) in id"
           :key="index"
         >
-          <SvgIcon
-            iconClass="denied"
-            @click="voteIt(item)"
+          <svg-icon
+            name="denied"
+            @click="voteIt(item, false)"
             style="
               font-size: 20px;
               flex: 1;
-              margin-right: 50px;
-              background-color: forestgreen;
-              width: 40%;
-              height: 40%;
+              margin-right: 30px;
+              width: 25%;
+              height: 25%;
               text-align: center;
             "
-          ></SvgIcon>
-          <div
-            @click="voteIt(item)"
+          ></svg-icon>
+          <svg-icon
+            name="agreed"
+            @click="voteIt(item, item)"
             style="
               font-size: 20px;
               flex: 1;
-              background-color: red;
-              width: 80%;
-              height: 40%;
+              width: 25%;
+              height: 25%;
               text-align: center;
             "
           >
-            disagree
-          </div>
+          </svg-icon>
         </div>
       </div>
       <div class="title" style="flex: 2">
         <div style="font-size: 60px; color: rgb(237, 198, 99)">得票数</div>
         <div v-for="(item, index) in id" :key="index">
-          {{ voteCount[index] }}
+          {{ voteCount_no[index] }}/{{ voteCount_yes[index] }}
         </div>
       </div>
     </div>
@@ -75,11 +73,9 @@ import Web3 from "web3";
 import contract from "truffle-contract";
 import election from "../../build/contracts/Election.json";
 import Navigator from "./Navigator.vue";
-import "../assets/icons";
-import SvgIcon from "../components/SvgIcon.vue";
 export default {
   name: "Decisions",
-  components: { Navigator, SvgIcon },
+  components: { Navigator },
   // 当前Vue组件被创建时回调的hook 函数
   async created() {
     console.log(this);
@@ -96,7 +92,8 @@ export default {
       decisions: {},
       id: [],
       name: [],
-      voteCount: [], //本账户投的票
+      voteCount_yes: [], //本账户投的赞成票
+      voteCount_no: [], //本账户投的反对票
       accounts: [],
       total: 0, //账户余额
     };
@@ -138,7 +135,7 @@ export default {
     async initContract() {
       console.log(election);
       this.electionContract = contract(election);
-      console.log(this.electionContract);
+      console.log("electionContract", this.electionContract);
       this.electionContract.setProvider(this.provider); //为接下来所有实例设置provider
       this.decisions = await this.electionContract.deployed(); //将合约'Election'的对象作为decisions放在Vue实例上并且将合约部署到区块链上
     },
@@ -175,9 +172,10 @@ export default {
             electionInstance.voteEvents(i).then((voteEvent) => {
               console.log(voteEvent);
               // 依次获取某一个事件信息
-              this.id.push(voteEvent[0]);
-              this.name.push(voteEvent[1]);
-              this.voteCount.push(voteEvent[2]);
+              this.id[i - 1] = voteEvent[0];
+              this.name[i - 1] = voteEvent[1];
+              this.voteCount_yes[i - 1] = voteEvent[2];
+              this.voteCount_no[i - 1] = voteEvent[3];
             });
           }
         });
@@ -185,13 +183,14 @@ export default {
     /**
      * 投票
      */
-    async voteIt(item) {
-      let res = await this.decisions.vote(item, {
+    async voteIt(item, decision) {
+      // console.log("1", this.decisions.methods);
+      // console.log(this.decisions.methods.candidate); // should print "function"
+      let res = await this.decisions.vote(item, decision, {
         from: this.accounts[0].toString(),
       });
-      alert("success!");
-
-      console.log("res", res);
+      this.render();
+      // alert("success!Please refresh your Page");
     },
   },
 };
