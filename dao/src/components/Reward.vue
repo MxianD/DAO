@@ -5,7 +5,7 @@
     <Navigator class="TopNavigator"></Navigator>
     <div class="BottomContent">
       <LeftNavigator class="LeftNavigator"></LeftNavigator>
-      <div class="RightContent"></div>
+      <div class="RightContent">GetReward</div>
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@ import LeftNavigator from "./LeftNavigator.vue";
 import Navigator from "./Navigator.vue";
 
 export default {
-  name: "System",
+  name: "GetReward",
   components: { LeftNavigator, Navigator },
 };
 </script>
@@ -32,6 +32,7 @@ export default {
 }
 .LeftNavigator {
   background-color: rgb(36, 37, 38);
+
   flex: 1;
 }
 .RightContent {

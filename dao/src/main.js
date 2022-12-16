@@ -18,11 +18,19 @@ import Home from './components/Home.vue'
 import Ranking from './components/Ranking.vue'
 import Decisions from './components/Decisions.vue'
 import System from './components/System.vue'
+import Me from './components/Me.vue'
+import Job from './components/Job.vue'
+import Reward from './components/Reward.vue'
+import Approval from './components/Approval.vue'
 const routes = [
         { path: '/', component: Home },
         { path: '/ranking', component: Ranking },
         { path: '/decisions', component: Decisions },
-        { path: '/system', component: System }
+        { path: '/system', component: System },
+        { path: '/me', component: Me },
+        { path: '/job', component: Job },
+        { path: '/reward', component: Reward },
+        { path: '/Approval', component: Approval },
     ]
     //创建路由实例并传递 `routes` 配置
 const router = VueRouter.createRouter({

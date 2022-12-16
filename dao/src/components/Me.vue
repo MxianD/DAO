@@ -5,7 +5,7 @@
     <Navigator class="TopNavigator"></Navigator>
     <div class="BottomContent">
       <LeftNavigator class="LeftNavigator"></LeftNavigator>
-      <div class="RightContent"></div>
+      <div class="RightContent">Me</div>
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@ import LeftNavigator from "./LeftNavigator.vue";
 import Navigator from "./Navigator.vue";
 
 export default {
-  name: "System",
+  name: "Me",
   components: { LeftNavigator, Navigator },
 };
 </script>
