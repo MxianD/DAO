@@ -5,7 +5,48 @@
     <Navigator class="TopNavigator"></Navigator>
     <div class="BottomContent">
       <LeftNavigator class="LeftNavigator"></LeftNavigator>
-      <div class="RightContent">GetReward</div>
+      <div class="RightContent">
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <strong class="font_1" style="font-size: 30px">Reward</strong>
+              <!-- <el-button class="button" text>Operation button</el-button> -->
+            </div>
+          </template>
+          <div>
+            <el-table
+              :data="dataList"
+              style="width: 100%"
+              :row-style="{ fontFamily: 'Georgia', fontSize: '20px' }"
+            >
+              <el-table-column label="Title" prop="title" />
+
+              <el-table-column label="Description" prop="desc" />
+              <el-table-column label="Reward" prop="reward" />
+              <el-table-column align="right">
+                <template #header>
+                  <el-input v-model="search" placeholder="Type to search" />
+                </template>
+                <template #default="scope">
+                  <el-button
+                    size="large"
+                    type="success"
+                    @click="handleDelete(scope.$index, scope.row)"
+                    >Check</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <div style="display: flex; justify-content: center; margin-top: 20px">
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              :total="1000"
+            />
+          </div>
+        </el-card>
+      </div>
     </div>
   </div>
 </template>
@@ -17,6 +58,35 @@ import Navigator from "./Navigator.vue";
 export default {
   name: "GetReward",
   components: { LeftNavigator, Navigator },
+  data() {
+    return {
+      dataList: [
+        {
+          title: "Approval_A",
+          desc: "Help us review a certain amount of proof materials every day to get paid, otherwise you will be punished",
+          reward: "reward:token:1 punishment:token:-1",
+          num: 1,
+        },
+        {
+          title: "Approval_B",
+          desc: "Help us review a certain amount of proof materials every day to get paid, otherwise you will be punished",
+          reward: "reward:token:1 punishment:token:-1",
+          num: 1,
+        },
+        {
+          title: "Approval_C",
+          desc: "Help us review a certain amount of proof materials every day to get paid, otherwise you will be punished",
+          reward: "reward:token:1 punishment:token:-1",
+          num: 1,
+        },
+      ],
+    };
+  },
+  methods: {
+    handleDelete(index, row) {
+      console.log(index, row);
+    },
+  },
 };
 </script>
 
@@ -36,7 +106,15 @@ export default {
   flex: 1;
 }
 .RightContent {
-  background-color: blueviolet;
+  background-color: rgb(67, 67, 67);
   flex: 7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+::v-deep .el-table thead {
+  color: black;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 20px;
 }
 </style>

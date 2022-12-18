@@ -5,8 +5,18 @@ const app = createApp({
     render: () => h(App)
 });
 /**
- * SVG
+ * 引入全局样式
  */
+import './assets/css/common.css'
+/**
+ * Element-plus
+ */
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+app.use(ElementPlus)
+    /**
+     * SVG
+     */
 import "@/svgIcon/index";
 import svgIcon from "@/svgIcon/index.vue";
 app.component('svg-icon', svgIcon);

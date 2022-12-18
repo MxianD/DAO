@@ -28,6 +28,9 @@ export default {
   font-family: Georgia, "Times New Roman", Times, serif;
   border-bottom: 1px solid;
 }
+.GetPersonalInfo:hover {
+  background-color: aliceblue;
+}
 .GetReward {
   background-color: rgb(36, 37, 38);
   width: 100%;
@@ -38,6 +41,9 @@ export default {
   font-size: 30px;
   font-family: Georgia, "Times New Roman", Times, serif;
   border-bottom: 1px solid;
+}
+.GetReward:hover {
+  background-color: aliceblue;
 }
 .GetJob {
   background-color: rgb(36, 37, 38);
@@ -50,6 +56,9 @@ export default {
   font-family: Georgia, "Times New Roman", Times, serif;
   border-bottom: 1px solid;
 }
+.GetJob:hover {
+  background-color: aliceblue;
+}
 .GetApproval {
   background-color: rgb(36, 37, 38);
   width: 100%;
@@ -60,5 +69,8 @@ export default {
   font-size: 30px;
   font-family: Georgia, "Times New Roman", Times, serif;
   border-bottom: 1px solid;
+}
+.GetApproval:hover {
+  background-color: aliceblue;
 }
 </style>

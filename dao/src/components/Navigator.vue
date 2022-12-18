@@ -1,7 +1,11 @@
 <template>
   <div
     id="root"
-    style="display: flex; border-bottom: 5px solid rgb(33, 34, 35)"
+    style="
+      display: flex;
+      border-bottom: 5px solid rgb(33, 34, 35);
+      height: 150px;
+    "
   >
     <router-link to="/">
       <div id="title">

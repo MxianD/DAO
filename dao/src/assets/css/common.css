@@ -1,0 +1,36 @@
+/**
+Element卡片
+*/
+
+.card-header {
+    display: flex;
+    align-items: center;
+    height: 5vh;
+}
+
+.text {
+    font-size: 14px;
+}
+
+.item {
+    margin-bottom: 18px;
+}
+
+.box-card {
+    width: 80vw;
+}
+
+
+/**
+文字样式
+*/
+
+.font_1 {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 20px;
+}
+
+.middle_style {
+    text-align: center;
+    line-height: 100%;
+}
