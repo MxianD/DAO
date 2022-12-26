@@ -62,7 +62,7 @@
                 left: 50px;
               "
             >
-              <router-link to="/me">Start</router-link>
+              <router-link to="/me" @click="sentUser()">Start</router-link>
             </p>
           </div>
         </div>
@@ -80,7 +80,25 @@
 </template>
 
 <script>
-export default {};
+import qs from "qs";
+export default {
+  methods: {
+    async sentUser() {
+      await this.axios
+        .post(
+          "http://127.0.0.1:8080/user/start",
+          qs.stringify({
+            useraddress: "0xecd7317B4d5A00716f30f12ef855A57A59DD9253",
+            level: 100,
+            nickname: "dvd",
+          })
+        )
+        .then((res) => {
+          console.log("aasd", res);
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>

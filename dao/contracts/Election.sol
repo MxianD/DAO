@@ -1,4 +1,4 @@
-pragma solidity >=0.8.17;
+pragma solidity ^0.4.24;
 
 /**
     投票模块
@@ -29,8 +29,8 @@ contract Election {
     mapping(uint256 => VoteEvent) public voteEvents; //事件映射
 
     constructor() public {
-        addVoteEvent(unicode"继续生存");
-        addVoteEvent(unicode"结束运转");
+        addVoteEvent("继续生存");
+        addVoteEvent("结束运转");
     }
 
     /**

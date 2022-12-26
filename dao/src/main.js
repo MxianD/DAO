@@ -5,6 +5,21 @@ const app = createApp({
     render: () => h(App)
 });
 /**
+ * axios
+ */
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+axios.defaults.withCredentials = true
+app.use(VueAxios, axios)
+
+//     // axios.interceptors.request.use(config => {
+//     //     config.headers.Authorization = window.sessionStorage.getItem('token')
+//     //     return config
+//     // })
+// axios.defaults.headers.post['Content-type'] = ['application/json']
+// axios.defaults.headers.get['Access-Control-Allow-Origin'] = ['*']
+
+/**
  * 引入全局样式
  */
 import './assets/css/common.css'

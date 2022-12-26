@@ -20,7 +20,7 @@
               <strong style="margin-right: 50px"> Select Job</strong>
               <el-cascader
                 v-model="value"
-                :options="dataList"
+                :options="userJobList"
                 @change="handleChange"
               />
             </div>
@@ -30,8 +30,10 @@
               <el-upload
                 class="upload-demo"
                 drag
-                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                action="http://127.0.0.1:8080/job/commit"
                 multiple
+                :data="user"
+                name="image"
               >
                 <el-icon class="el-icon--upload"
                   ><upload-filled style="height: 70vh"
@@ -49,9 +51,9 @@
             <div
               style="margin-top: 8vh; display: flex; justify-content: flex-end"
             >
-              <el-button size="large" @click="commitEvidence()"
-                >commit</el-button
-              >
+              <el-button class="ml-3" type="success" @click="submitUpload">
+                upload to server
+              </el-button>
             </div>
           </div>
         </el-card>
@@ -63,21 +65,52 @@
 <script>
 import LeftNavigator from "./LeftNavigator.vue";
 import Navigator from "./Navigator.vue";
+import qs from "qs";
 export default {
   name: "Approval",
   components: { LeftNavigator, Navigator },
+  created() {
+    this.getUserInfo();
+  },
   data() {
     return {
-      dataList: [
-        { value: "Approval_A", label: "Approval_A" },
-        { value: "Approval_B", label: "Approval_B" },
-        { value: "Approval_C", label: "Approval_C" },
-      ],
+      userJobList: [],
+      user: {
+        useraddress: "0xecd7317B4d5A00716f30f12ef855A57A59DD9253",
+        userJobId: 1,
+      },
     };
   },
   methods: {
-    commitEvidence() {
-      console.log("this is evidence!");
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+
+    /**
+     * 获取用户信息
+     */
+    async getUserInfo() {
+      await this.axios
+        .post(
+          "http://127.0.0.1:8080/job/getSelfUserJob",
+          qs.stringify({
+            useraddress: "0xecd7317B4d5A00716f30f12ef855A57A59DD9253",
+          })
+        )
+        .then((res) => {
+          console.log("Approval", res.data.userJobList);
+          //  this.userJobList = res;
+          for (let i = 0; i < res.data.userJobList.length; i++) {
+            let obj = {
+              value: "",
+              label: "",
+            };
+            obj.value = res.data.userJobList[i].title;
+            obj.label = res.data.userJobList[i].title;
+            this.userJobList.push(obj);
+            console.log("i", i, this.userJobList);
+          }
+        });
     },
   },
 };
