@@ -1757,7 +1757,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.11",
-  "updatedAt": "2022-12-26T08:12:42.492Z",
+  "updatedAt": "2022-12-27T07:23:22.608Z",
   "devdoc": {
     "methods": {},
     "title": "SafeERC20"

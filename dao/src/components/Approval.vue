@@ -19,7 +19,7 @@
             <div class="font_1">
               <strong style="margin-right: 50px"> Select Job</strong>
               <el-cascader
-                v-model="value"
+                v-model="user.userJobId"
                 :options="userJobList"
                 @change="handleChange"
               />
@@ -32,8 +32,10 @@
                 drag
                 action="http://127.0.0.1:8080/job/commit"
                 multiple
+                ref="upload"
                 :data="user"
                 name="image"
+                :auto-upload="false"
               >
                 <el-icon class="el-icon--upload"
                   ><upload-filled style="height: 70vh"
@@ -77,13 +79,17 @@ export default {
       userJobList: [],
       user: {
         useraddress: "0xecd7317B4d5A00716f30f12ef855A57A59DD9253",
-        userJobId: 1,
+        userJobId: 0,
       },
     };
   },
   methods: {
     submitUpload() {
-      this.$refs.upload.submit();
+      if (this.user.userJobId == 0) {
+        alert("Please choose Job!");
+      } else {
+        this.$refs.upload.submit();
+      }
     },
 
     /**

@@ -108,7 +108,7 @@ export default {
         console.log("accs", accs);
         this.accounts.push(accs); //获取链上的账户
       });
-      const contractAddress = "0x4cC388019aa11ABF0e99034C1eD22b629CC4e82B";
+      const contractAddress = "0x79A35a5F660417f8eD3bCfc99b1bCD09DeB3a70C";
       // const contractAbi = require("../../build/contracts/MyToken.json").abi;
 
       // console.log(JSON.stringify(contractAbi));
@@ -324,7 +324,7 @@ export default {
         },
       ];
       this.contract = new this.web3.eth.Contract(contractAbi, contractAddress);
-      this.address = "0x4cC388019aa11ABF0e99034C1eD22b629CC4e82B"; // Replace with the address for which you want to retrieve the balance
+      this.address = "0x79A35a5F660417f8eD3bCfc99b1bCD09DeB3a70C"; // Replace with the address for which you want to retrieve the balance
     },
     /**
      * 初始化合约·
@@ -351,7 +351,7 @@ export default {
     getBalance() {
       console.log(this.contract);
       this.contract.methods
-        .getBalance("0xecd7317B4d5A00716f30f12ef855A57A59DD9253")
+        .getBalance("0xbec6559AC38747D80Cc1fF1bD9437965Aa586ED7")
         .call()
         .then((balance) => {
           console.log("ss", balance); // Outputs the balance of the ERC20 token for the specified address

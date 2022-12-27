@@ -15,7 +15,12 @@
           </template>
           <div>
             <el-table
-              :data="dataList"
+              :data="
+                dataList.slice(
+                  (currentPage - 1) * pageSize,
+                  currentPage * pageSize
+                )
+              "
               style="width: 100%"
               :row-style="{ fontFamily: 'Georgia', fontSize: '20px' }"
             >
@@ -25,7 +30,11 @@
               <el-table-column label="Reward" prop="reward" />
               <el-table-column align="right">
                 <template #header>
-                  <el-input v-model="search" placeholder="Type to search" />
+                  <el-input
+                    v-model="search"
+                    placeholder="Type to search"
+                    @keyup.enter.native="sentKeyWord()"
+                  />
                 </template>
                 <template #default="scope">
                   <el-button
@@ -42,7 +51,11 @@
             <el-pagination
               background
               layout="prev, pager, next"
-              :total="1000"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :total="10"
+              :current-page="currentPage"
+              :page-size="pageSize"
             />
           </div>
         </el-card>
@@ -71,6 +84,9 @@ export default {
       accounts: [],
       contract: {},
       address: "",
+      search: "",
+      currentPage: 1,
+      pageSize: 6,
       dataList: [
         {
           title: "Approval_A",
@@ -92,6 +108,11 @@ export default {
         },
       ],
     };
+  },
+  watch: {
+    search(newVal, oldVal) {
+      console.log(newVal, oldVal);
+    },
   },
   async created() {
     await this.initWeb3Account();
@@ -131,7 +152,7 @@ export default {
         console.log("accs", accs);
         this.accounts.push(accs); //获取链上的账户
       });
-      const contractAddress = "0x4cC388019aa11ABF0e99034C1eD22b629CC4e82B";
+      const contractAddress = "0x79A35a5F660417f8eD3bCfc99b1bCD09DeB3a70C";
       // const contractAbi = require("../../build/contracts/MyToken.json").abi;
 
       // console.log(JSON.stringify(contractAbi));
@@ -347,7 +368,7 @@ export default {
         },
       ];
       this.contract = new this.web3.eth.Contract(contractAbi, contractAddress);
-      this.address = "0x4cC388019aa11ABF0e99034C1eD22b629CC4e82B"; // Replace with the address for which you want to retrieve the balance
+      this.address = "0x79A35a5F660417f8eD3bCfc99b1bCD09DeB3a70C"; // Replace with the address for which you want to retrieve the balance
     },
     /**
      * 初始化合约·
@@ -374,7 +395,7 @@ export default {
     getBalance() {
       console.log(this.contract);
       this.contract.methods
-        .getBalance("0xecd7317B4d5A00716f30f12ef855A57A59DD9253")
+        .getBalance("0xbec6559AC38747D80Cc1fF1bD9437965Aa586ED7")
         .call()
         .then((balance) => {
           console.log("ss", balance); // Outputs the balance of the ERC20 token for the specified address
@@ -403,7 +424,7 @@ export default {
         .post(
           "http://127.0.0.1:8080/user/getUserByAddress",
           qs.stringify({
-            useraddress: "0xecd7317B4d5A00716f30f12ef855A57A59DD9253",
+            useraddress: "0xbec6559AC38747D80Cc1fF1bD9437965Aa586ED7",
           })
         )
         .then((res) => {
@@ -413,6 +434,21 @@ export default {
     },
     handleDelete(index, row) {
       console.log(index, row);
+    },
+    /**
+     * 分页
+     */
+    handleSizeChange(val) {
+      this.pagesize = val;
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+    },
+    /**
+     * 发送关键词
+     */
+    sentKeyWord() {
+      console.log("search", this.search);
     },
   },
 };
